@@ -1,1 +1,13 @@
-<h1>Hello</h1>
+{{!-- <h1>Hello</h1> --}}
+
+<form action="/" method="post" enctype="multipart/form-data">
+  <h3>画像をアップロードする</h3>
+  {{!-- ファイルをアップロードできるように指定（acceptでどの形式でもアップロード可能に設定） --}}
+  <input type="file" name="imageFile" accept="image/*">
+  <input type="submit">
+</form>
+
+<div>
+    <p>選択した画像が下に表示されます</p>
+    <img src="Free_Sample_By_Wix (1).jpg" alt="">
+</div>
