@@ -23,8 +23,6 @@ const pool = mysql.createPool({
 
 // エンドポイント作成
 app.get("/", (req, res) => {
-    res.render("home");
-
     pool.getConnection((err, connection) => {
         if (err) throw err;
         console.log("MYSQLと接続中・・・・🌳");
@@ -35,11 +33,14 @@ app.get("/", (req, res) => {
             connection.release();
 
             console.log(rows);
+            if (!err) {
+                res.render("home", { rows });
+            };
         });
     });
 });
 
-// Postのためのエンドポイント作成
+//  Postのためのエンドポイント作成
 app.post("/", (req, res) => {
     if (!req.files) {
         return res.status(400).send("何も画像がアップロードされていません");
@@ -54,7 +55,23 @@ app.post("/", (req, res) => {
     // サーバーに画像ファイルを置く場所を指定
     imageFile.mv(uploadPath, function(err) {
         if (err) return res.status(500).send(err);
-        res.send("画像アップロードに成功しました！");
+
+        // mysqlに画像を追加して保存する記述
+        pool.getConnection((err, connection) => {
+            if (err) throw err;
+            console.log("MYSQLと接続中・・・・🌳");
+            // データ取得
+            connection.query(`INSERT INTO image (imageName) VALUES (?)`, [imageFile.name], (err, rows) => {
+                // 接続を閉じる
+                connection.release();
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                console.log(rows);
+                res.redirect("/");
+            });
+        });
     });
 });
 

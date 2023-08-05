@@ -8,6 +8,9 @@
 </form>
 
 <div>
+    {{#each rows}}
     <p>選択した画像が下に表示されます</p>
-    <img src="Free_Sample_By_Wix (1).jpg" alt="">
+    <img src={{this.imageName}} alt="">
+    <p>{{ this.imageName }}</p>
+    {{/each}}
 </div>
